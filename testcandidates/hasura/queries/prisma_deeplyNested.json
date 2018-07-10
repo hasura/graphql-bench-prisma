@@ -1,0 +1,1 @@
+{"query":"query prisma_deeplyNested {\n  Album(where: {ArtistId:{_eq: 127}}) {\n    AlbumId\n    Title\n    tracks {\n      TrackId\n      Name\n      genre {\n        Name\n      }\n    }\n    artist {\n      albums {\n        tracks {\n          media {\n            Name\n          }\n          genre {\n            Name\n          }\n        }\n      }\n    }\n  }\n}\n"}

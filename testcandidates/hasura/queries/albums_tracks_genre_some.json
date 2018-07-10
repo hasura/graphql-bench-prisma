@@ -1,0 +1,1 @@
+{"query":"query albums_tracks_genre_some {\n  Album(where: {ArtistId: {_eq: 127}}) {\n    ArtistId\n    Title\n    tracks {\n      TrackId\n      Name\n      genre {\n        Name\n      }\n    }\n  }\n}\n"}

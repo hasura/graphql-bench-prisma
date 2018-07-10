@@ -1,0 +1,29 @@
+# Transient db - will lose it's data once restarted
+version: "3"
+services:
+  postgres_hasura:
+    image: postgres:10.3
+    container_name: psql_hasura
+    restart: always
+    command: postgres -c 'max_connections=500'
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: unsecured
+      POSTGRES_DB: chinook
+    ports:
+      - "127.0.0.1:7432:5432"
+    logging:
+      options:
+        max-size: 50m
+        max-file: "3"
+  graphql-engine:
+    image: hasura/graphql-engine:latest
+    container_name: graphql-engine
+    restart: always
+    command: graphql-engine --database-url "postgres://postgres:unsecured@psql_hasura:5432/chinook" serve --cors-domain "http://localhost:9695" --server-port 5095 --enable-console
+    ports:
+      - "127.0.0.1:5095:5095"
+    logging:
+      options:
+        max-size: 50m
+        max-file: "3"

@@ -73,6 +73,7 @@ bench_query() {
 
         done
         ../testcandidates/$PROGRAM_DIR/stop
+        echo "Finished testing $CANDIDATE...."
     done
 }
 

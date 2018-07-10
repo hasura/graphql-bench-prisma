@@ -1,0 +1,2 @@
+{"query":"query albums_tracks_genre_all {\n  Album {\n    AlbumId\n    Title\n  tracks {\n      TrackId\n      Name\n  genre {\n        Name\n      }\n    }\n  }\n}\n"}
+

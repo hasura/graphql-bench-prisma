@@ -1,0 +1,4 @@
+{
+"query":"query {\n  Artist(where:{ArtistId: {_eq: 3}} ) {\n      ArtistId\n      Name\n  }}"
+}
+
