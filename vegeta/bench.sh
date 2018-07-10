@@ -1,5 +1,7 @@
 #!/usr/bin/env sh
 
+set -x
+
 # Change into script's directory
 cd "$(dirname "$0")"
 
@@ -14,6 +16,7 @@ run_vegeta() {
     local DURATION=$5
     local BENCH_STATS_FILE=$6
     local TIMEOUT=$7
+    local BENCH_MEMORY_FILE=$8
 
     {
     echo "POST $PROGRAM_URL"
@@ -22,6 +25,8 @@ run_vegeta() {
     } > ./temp/temptargets.txt
 
     mkfileP "$BENCH_STATS_FILE"
+    mkfileP "$BENCH_MEMORY_FILE"
+    bash get_ram.sh "$DURATION" > "$BENCH_MEMORY_FILE" &
     vegeta attack -rate=$RPS -duration=""$DURATION"s" -timeout=""$TIMEOUT"s" -targets=./temp/temptargets.txt | vegeta report > "$BENCH_STATS_FILE"
 }
 
@@ -53,7 +58,7 @@ bench_query() {
             echo ""
             echo "----------------- Warmup: $QUERY_NAME $PROGRAM_DIR $PROGRAM_URL 100Req/s ${WARMUP_DURATION}s -----------------"
             echo ""
-            run_vegeta "$PROGRAM_URL" "$PROGRAM_DIR" "$QUERY_NAME" 100 "$WARMUP_DURATION" "temp/tmp.warmup" "$TIMEOUT"
+            run_vegeta "$PROGRAM_URL" "$PROGRAM_DIR" "$QUERY_NAME" 100 "$WARMUP_DURATION" "temp/tmp.warmup" "$TIMEOUT" "temp/mem.warmup"
             rm "temp/tmp.warmup"
 
             # Give the service a moment to recover before the first attack starts
@@ -64,9 +69,10 @@ bench_query() {
 
             local BENCH_NAME="$QUERY_NAME $PROGRAM_DIR $PROGRAM_URL "$RPS"Req/s "$DURATION"s $OPEN_CONNS"
             local BENCH_STATS_FILE="../testcandidates/$PROGRAM_DIR/results/$BENCH_FOLDER/$QUERY_NAME-$RPS.txt"
+            local BENCH_MEMORY_FILE="../testcandidates/$PROGRAM_DIR/results/$BENCH_FOLDER/$QUERY_NAME-$RPS-MEMORY.txt"
             echo "----------------- Benching: $BENCH_NAME -----------------"
             echo ""
-            run_vegeta "$PROGRAM_URL" "$PROGRAM_DIR" "$QUERY_NAME" "$RPS" "$DURATION" "$BENCH_STATS_FILE" "$TIMEOUT"
+            run_vegeta "$PROGRAM_URL" "$PROGRAM_DIR" "$QUERY_NAME" "$RPS" "$DURATION" "$BENCH_STATS_FILE" "$TIMEOUT" "$BENCH_MEMORY_FILE"
 
             # Give the service a moment to recover before the next attack starts
             sleep 15

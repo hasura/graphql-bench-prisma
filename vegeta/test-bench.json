@@ -1,0 +1,26 @@
+[
+  {
+    "query": "byArtistId",
+    "timeout": 5,
+    "warmup_duration": 10,
+    "duration": 60,
+    "candidates": [
+      {
+        "dir": "hasura",
+        "url": "http://localhost:5095/v1alpha1/graphql"
+      },
+      {
+        "dir": "postgraphile_next",
+        "url": "http://localhost:5091/graphql"
+      },
+      {
+        "dir": "prisma",
+        "url": "http://localhost:4466"
+      }
+    ],
+    "rps": [
+      100,
+      3000
+    ]
+  } 
+]
